@@ -5,11 +5,12 @@ import 'package:show_my_deals/src/ServerRequest.dart';
 List<String> Districtlist = [];
 
 class initalizeData {
-  loadDistrict() async {
+  static loadDistrict() async {
     ResponseData apiRequest = await GFetch(AppConfig.endpoint + "districts");
 
     if (apiRequest.isSucess) {
       Districtlist = apiRequest.data["districts"];
+      print(Districtlist);
     } else {}
   }
 }

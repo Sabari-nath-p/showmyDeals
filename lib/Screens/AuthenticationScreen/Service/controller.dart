@@ -12,6 +12,7 @@ class AuthenticationController extends GetxController {
   String countryCodeController = "+91";
   String TOP = "";
   bool Loading = false;
+  String SelectedDistrict = "";
 
   changeCountryCode(BuildContext context) async {
     FlCountryCodePicker countryPicker = FlCountryCodePicker(

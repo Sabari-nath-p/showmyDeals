@@ -11,8 +11,9 @@ Future<ResponseData> GFetch(String endpoint, {var header = null}) async {
     'Accept': 'application/json',
     // "Content-Type": "application/json",
     // "Authorization": "Token $token",
-    "Vary": "Accept"
+    //  "Vary": "Accept"
   };
+  print(header);
 //  try {
   final Respose =
       await get(Uri.parse(AppConfig.endpoint + endpoint), headers: header);
