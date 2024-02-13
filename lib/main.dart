@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/AuthenticationScreenMain.dart';
+import 'package:show_my_deals/Screens/HomeScreen/views/ProfileSettings.dart';
 import 'package:show_my_deals/appConfig.dart';
 import 'package:show_my_deals/src/InitialiseData.dart';
 import 'package:sizer/sizer.dart';
@@ -13,11 +14,11 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 List DistrictList = [];
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
-  final Response = await get(Uri.parse(AppConfig.endpoint + "districts"));
-  if (Response.statusCode == 200) {
-    var data = json.decode(Response.body);
-    DistrictList = data["districts"];
-  }
+  // final Response = await get(Uri.parse(AppConfig.endpoint + "districts"));
+  // if (Response.statusCode == 200) {
+  //   var data = json.decode(Response.body);
+  //   DistrictList = data["districts"];
+  // }
   print(DistrictList);
   runApp(ShowMyDeals());
 }
