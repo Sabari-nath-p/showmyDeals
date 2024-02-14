@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/AuthenticationScreenMain.dart';
+import 'package:show_my_deals/Screens/Bags/AddBagScreen.dart';
 import 'package:show_my_deals/Screens/HomeScreen/views/ProfileSettings.dart';
 import 'package:show_my_deals/appConfig.dart';
 import 'package:show_my_deals/src/InitialiseData.dart';
@@ -32,7 +33,7 @@ class ShowMyDeals extends StatelessWidget {
         builder: (context, orientation, DeviceType) => GetMaterialApp(
               navigatorKey: navigatorKey,
               title: "ShowMyDeals",
-              home: AuthenticationScreen(),
+              home: AddBagScreen(),
             ));
   }
 }
