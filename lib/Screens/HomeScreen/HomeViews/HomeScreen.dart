@@ -4,7 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:show_my_deals/Base/AppColor.dart';
-import 'package:show_my_deals/Screens/HomeScreen/views/OfferCard.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/JobOfferView.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/OfferCard.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/OfferView.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/StoreOfferView.dart';
 import 'package:sizer/sizer.dart';
 
 import '../service/HomeController.dart';
@@ -122,83 +125,12 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                height: 3.4.h,
-                width: 90.2.w,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.grey.withOpacity(.5))),
-                child: Row(
-                  children: [
-                    for (var data in [
-                      "All",
-                      "Trending Offer",
-                      "Grocerry",
-                      "Gadget"
-                    ])
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w),
-                        decoration: BoxDecoration(
-                            border: Border(
-                                right: BorderSide(color: Appc.LightGery))),
-                        child: Text(
-                          data,
-                          style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Appc.LightGery),
-                        ),
-                      ),
-                  ],
+              if (hctrl.TopMenu == 0)
+                OfferView(
+                  OfferList: hctrl.offerList,
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                width: 100.2.w,
-                margin: EdgeInsets.symmetric(horizontal: 3.8.w),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(0xffF6F8FF)),
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 3.w, vertical: 2),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Appc.PrimaryColor),
-                      child: Text(
-                        "All  Deals in Kozhikode",
-                        style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 100.w,
-                      child: Wrap(
-                        spacing: 5.w,
-                        runSpacing: 3.w,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runAlignment: WrapAlignment.center,
-                        alignment: WrapAlignment.center,
-                        children: [for (int i = 0; i < 20; i++) OfferCard()],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              if (hctrl.TopMenu == 1) JobOfferView(),
+              if (hctrl.TopMenu == 2) StoreOfferView()
             ],
           );
         }),
