@@ -1,18 +1,29 @@
+import 'dart:convert';
+
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Views/OTPVerificationScreen.dart';
+import 'package:show_my_deals/Screens/AuthenticationScreen/Views/OnBoardingView.dart';
+import 'package:show_my_deals/Screens/HomeScreen/DashBoard.dart';
+import 'package:show_my_deals/appConfig.dart';
+import 'package:show_my_deals/main.dart';
+import 'package:show_my_deals/src/FlashMessage.dart';
 import 'package:show_my_deals/src/ServerRequest.dart';
 import 'package:sizer/sizer.dart';
 
 class AuthenticationController extends GetxController {
   TextEditingController PhoneController = TextEditingController();
   TextEditingController OtpController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   String countryCodeController = "+91";
   String TOP = "";
   bool Loading = false;
-  String SelectedDistrict = "";
+  String? SelectedDistrict;
+  var userDate;
 
   changeCountryCode(BuildContext context) async {
     FlCountryCodePicker countryPicker = FlCountryCodePicker(
@@ -39,13 +50,82 @@ class AuthenticationController extends GetxController {
     update();
   }
 
+  submitOnboarding() async {
+    final Response = await post(Uri.parse(AppConfig.endpoint + "user/details"),
+        body: json.encode({
+          "id": userDate["id"],
+          " district": SelectedDistrict,
+          "name": nameController.text.trim()
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        });
+    print(Response.body);
+    print(Response.statusCode);
+    if (Response.statusCode == 200) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString("NAME", nameController.text);
+      pref.setString("DISTRICT", SelectedDistrict!);
+      pref.setString("LOGIN", "IN");
+      Get.offAll(() => DashBoardScreen(), transition: Transition.rightToLeft);
+    }
+  }
+
+  verifyOtp() async {
+    final Response = await post(Uri.parse(AppConfig.endpoint + "user/otp"),
+        body: json.encode({
+          "phone": PhoneController.text.trim(),
+          "otp": OtpController.text.trim(),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        });
+    print(Response.body);
+    print(Response.statusCode);
+    var data = json.decode(Response.body);
+    if (Response.statusCode == 200) {
+      if (data["otpVerified"]) {
+        Loading = false;
+        update();
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString("ID", data["user"]["id"]);
+        pref.setString("SID", data["user"]["secret"]);
+        userDate = data["user"];
+        if (!data["collectData"]) {
+          pref.setString("NAME", data["user"]["name"]);
+          pref.setString("DISTRICT", data["user"]["district"]);
+          pref.setString("LOGIN", "IN");
+          Get.offAll(() => DashBoardScreen(),
+              transition: Transition.rightToLeft);
+        } else {
+          nameController.text = "";
+          SelectedDistrict = DistrictList.first.toString();
+          update();
+          Get.to(() => OnBoardingScreen(), transition: Transition.rightToLeft);
+        }
+      } else {
+        FlashMessage("Invalid OTP", "");
+        Loading = false;
+        update();
+      }
+    } else {
+      FlashMessage("Invalid OTP", "Please enter correct otp");
+      Loading = false;
+      update();
+      Loading = false;
+      update();
+    }
+  }
+
   SendOtp() async {
     Loading = true;
     ResponseData response =
         await GFetch("user/otp?phone=${PhoneController.text.trim()}");
     Loading = false;
+    print(response.data);
     if (response.isSucess) {
-      TOP = response.data["top"];
+      // TOP = response.data["top"];
+      OtpController.text = "";
       update();
       Get.to(() => OTPVerificationScreen(), transition: Transition.rightToLeft);
     }

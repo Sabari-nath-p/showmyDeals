@@ -6,6 +6,7 @@ import 'package:show_my_deals/Base/AppColor.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Service/controller.dart';
 import 'package:show_my_deals/Screens/HomeScreen/DashBoard.dart';
 import 'package:show_my_deals/main.dart';
+import 'package:show_my_deals/src/FlashMessage.dart';
 import 'package:show_my_deals/src/SMDappBar.dart';
 import 'package:sizer/sizer.dart';
 
@@ -58,8 +59,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Appc.LightGery)),
                         child: TextFormField(
-                          // controller: authctrl.PhoneController,
-                          keyboardType: TextInputType.phone,
+                          controller: authctrl.nameController,
+                          keyboardType: TextInputType.name,
                           style: GoogleFonts.poppins(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
@@ -95,6 +96,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Appc.LightGery)),
                         child: DropdownButton(
+                          value: authctrl.SelectedDistrict,
                           items: DistrictList.map((e) => DropdownMenuItem(
                               value: e,
                               child: Text(
@@ -105,15 +107,25 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               ))).toList(),
                           isExpanded: true,
                           underline: Container(),
-                          onChanged: (v) {},
+                          onChanged: (v) {
+                            authctrl.SelectedDistrict = v.toString();
+                            authctrl.update();
+                          },
                         )),
                     SizedBox(
                       height: 4.h,
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => DashBoardScreen(),
-                            transition: Transition.rightToLeft);
+                        if (authctrl.SelectedDistrict != "" &&
+                            authctrl.nameController.text.isNotEmpty) {
+                          authctrl.Loading = true;
+                          authctrl.update();
+                          authctrl.submitOnboarding();
+                        } else {
+                          FlashMessage("Onboarding failed",
+                              "Please input details to continue");
+                        }
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 6.8.w),

@@ -183,6 +183,12 @@ class HomeController extends GetxController {
     return (formattedDate); // Output: 2023-08-10
   }
 
+  String CAppformat2(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat("dd MMM").format(dateTime);
+    return (formattedDate); // Output: 2023-08-10
+  }
+
   String CAppRelative(String dateString, BuildContext context) {
     DateTime dateTime = DateTime.parse(dateString);
     RelativeDateTime _relativeDateTime =

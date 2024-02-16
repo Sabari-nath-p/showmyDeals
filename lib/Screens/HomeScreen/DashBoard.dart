@@ -5,7 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:show_my_deals/Base/AppColor.dart';
+import 'package:show_my_deals/Screens/Bags/AddBagScreen.dart';
 import 'package:show_my_deals/Screens/DetailedView/Views/DetailedView.dart';
+import 'package:show_my_deals/Screens/Game/GameMainScreen.dart';
+import 'package:show_my_deals/Screens/Game/controller.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/ProfileSettings.dart';
 import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:show_my_deals/Screens/HomeScreen/HomeViews/HomeScreen.dart';
 import 'package:show_my_deals/Screens/HomeScreen/HomeViews/JobDetailedScreen.dart';
@@ -35,6 +39,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   String bottomSelected = "homeIcon.png";
 
   HomeController hctrl = Get.put(HomeController());
+  GameController ctrl = Get.put(GameController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +68,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   ],
                 ),
               ),
-            Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              bottom: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (hctrl.selectedOfferModel != null)
-                    Expanded(child: OfferDetailedView())
-                  else if (hctrl.selectedJobModel != null)
-                    Expanded(child: JobDetailedScreen())
-                  else if (hctrl.selectOutletModel != null)
-                    Expanded(child: ShopDetailedPage())
-                  else
-                    Expanded(child: HomeScreen())
-                ],
-              ),
-            ),
+            if (bottomSelected == listIcon[1])
+              Positioned(
+                  top: 0, right: 0, left: 0, bottom: 0, child: AddBagScreen()),
+            if (bottomSelected == listIcon[2])
+              Positioned(
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  bottom: 0,
+                  child: GameSpinningView()),
+            if (bottomSelected == listIcon[4])
+              Positioned(child: ProfileSettingScreen()),
             Positioned(
                 bottom: 0,
                 right: 0,

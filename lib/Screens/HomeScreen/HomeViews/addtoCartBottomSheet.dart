@@ -166,7 +166,7 @@ class _addToCartBottomSheetState extends State<addToCartBottomSheet> {
           InkWell(
             onTap: () {
               for (var data in selectedItem) {
-                hctrl.addToCard(data.itemid!, data.itemname!, data.itemname!);
+                hctrl.addToCard(data.itemid!, data.itemname!, data.image!);
               }
               print("Working");
               Get.back();

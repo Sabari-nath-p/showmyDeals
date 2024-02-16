@@ -36,16 +36,11 @@ class AuthenticationView extends StatelessWidget {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.8.w),
-                child: InkWell(
-                  onTap: () {
-                    Get.to(() => DetailedViewScreen());
-                  },
-                  child: Text(
-                    "Discover Deals, Jobs and Stores  in one place!",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 15.sp, fontWeight: FontWeight.w700),
-                  ),
+                child: Text(
+                  "Discover Deals, Jobs and Stores  in one place!",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      fontSize: 15.sp, fontWeight: FontWeight.w700),
                 )),
             SizedBox(
               height: 5.2.h,
@@ -150,17 +145,15 @@ class AuthenticationView extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                // if (authctrl.PhoneController.text.isEmpty) {
-                //   FlashMessage("Invalid Entry",
-                //       "Some fields were left empty or contain invalid information");
-                //   return;
-                // } else if (authctrl.Loading) {
-                //   return;
-                // } else {
-                //   authctrl.SendOtp();
-                // }
-
-                Get.to(() => OTPVerificationScreen());
+                if (authctrl.PhoneController.text.isEmpty) {
+                  FlashMessage("Invalid Entry",
+                      "Some fields were left empty or contain invalid information");
+                  return;
+                } else if (authctrl.Loading) {
+                  return;
+                } else {
+                  authctrl.SendOtp();
+                }
               },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 6.8.w),

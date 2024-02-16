@@ -7,6 +7,7 @@ import 'package:show_my_deals/Base/AppColor.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Service/controller.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Views/OnBoardingView.dart';
 import 'package:show_my_deals/appConfig.dart';
+import 'package:show_my_deals/src/FlashMessage.dart';
 import 'package:show_my_deals/src/SMDappBar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,6 +53,9 @@ class OTPVerificationScreen extends StatelessWidget {
                   ),
                   Pinput(
                     length: 4,
+                    androidSmsAutofillMethod:
+                        AndroidSmsAutofillMethod.smsUserConsentApi,
+                    controller: authctrl.OtpController,
                     defaultPinTheme: PinTheme(
                         width: 10.8.w,
                         height: 10.8.w,
@@ -89,8 +93,14 @@ class OTPVerificationScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.to(() => OnBoardingScreen(),
-                          transition: Transition.rightToLeft);
+                      if (authctrl.OtpController.text.isNotEmpty) {
+                        authctrl.Loading = true;
+                        authctrl.update();
+                        authctrl.verifyOtp();
+                      } else {
+                        FlashMessage(
+                            "Invalid Entry", "Please enter OTP to continue");
+                      }
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 6.8.w),
