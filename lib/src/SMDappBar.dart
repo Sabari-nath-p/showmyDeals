@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_my_deals/Base/AppColor.dart';
+import 'package:show_my_deals/Screens/Game/controller.dart';
 import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:show_my_deals/main.dart';
+import 'package:show_my_deals/src/DisctricSelector.dart';
 import 'package:sizer/sizer.dart';
 
 class SMDAppBar extends StatelessWidget {
@@ -68,6 +70,7 @@ class SMDAppBar extends StatelessWidget {
 
 PreferredSizeWidget CappBar({bool isBack = false}) {
   HomeController hctrl = Get.put(HomeController());
+  GameController gctrl = Get.put(GameController());
   return AppBar(
     leadingWidth: 36.51.w,
     leading: (isBack)
@@ -106,56 +109,101 @@ PreferredSizeWidget CappBar({bool isBack = false}) {
             ],
           ),
     actions: [
-      Container(
-        width: 35.21.w,
-        height: 3.11.h,
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Appc.LightGery)),
-        child: Row(
-          children: [
-            Icon(
-              Icons.location_on,
-              color: Appc.PrimaryColor,
-              size: 4.w,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            GetBuilder<HomeController>(builder: (_) {
-              return Expanded(
-                child: DropdownButton(
-                  value: hctrl.selectedDistrict,
-                  style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w400),
-                  items: DistrictList.map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(
-                        e.toString().capitalize.toString(),
-                        style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w300),
-                      ))).toList(),
-                  isExpanded: true,
-                  underline: Container(),
-                  onChanged: (v) async {
-                    hctrl.selectedDistrict = v.toString();
-                    SharedPreferences preferences =
-                        await SharedPreferences.getInstance();
-                    preferences.setString("DISTRICT", v.toString());
-                    print(v);
-                    hctrl.update();
-                  },
+      GetBuilder<HomeController>(builder: (_) {
+        return Container(
+          width: 35.21.w,
+          height: 3.11.h,
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Appc.LightGery)),
+          child: InkWell(
+            onTap: () {
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  //    showDragHandle: true,
+                  // backgroundColor: Colors.white,
+                  context: navigatorKey.currentState!.context,
+                  builder: (ct) => DisctrictSelector());
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                  color: Appc.PrimaryColor,
+                  size: 4.w,
                 ),
-              );
-            }),
-          ],
-        ),
-      ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: Text(
+                    _.selectedDistrict.toString().replaceAll("null", "--"),
+                    style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    //   color: Appc.PrimaryColor,
+                    size: 4.2.w,
+                  ),
+                ),
+
+                // GetBuilder<HomeController>(builder: (_) {
+                //   return Expanded(
+                //     child: DropdownButton(
+
+                //       value: hctrl.selectedDistrict == ""
+                //           ? DistrictList.first
+                //           : hctrl.selectedDistrict,
+                //       style: GoogleFonts.poppins(
+                //           color: Colors.black,
+                //           fontSize: 10.sp,
+                //           fontWeight: FontWeight.w400),
+                //       items: DistrictList.map((e) => DropdownMenuItem(
+                //           value: e,
+                //           child: Text(
+                //             e.toString().capitalize.toString(),
+                //             style: GoogleFonts.poppins(
+                //                 color: Colors.black,
+                //                 fontSize: 10.sp,
+                //                 fontWeight: FontWeight.w300),
+                //           ))).toList(),
+                //       isExpanded: true,
+                //       underline: Container(),
+                //       onChanged: (v) async {
+                //         hctrl.selectedDistrict = v.toString();
+                //         SharedPreferences preferences =
+                //             await SharedPreferences.getInstance();
+                //         preferences.setString("DISTRICT", v.toString());
+
+                //         print(v);
+                //         hctrl.loadOffers();
+                //         hctrl.loadJobs();
+                //         hctrl.loadShopes();
+                //         gctrl.fetchData();
+                //         hctrl.selectedJobModel = null;
+                //         hctrl.selectedOfferModel = null;
+                //         hctrl.selectOutletModel = null;
+                //         hctrl.selectedTag = null;
+                //         hctrl.update();
+                //       },
+                //     ),
+                //   );
+                // }),
+              ],
+            ),
+          ),
+        );
+      }),
       SizedBox(
         width: 5.2.w,
       ),

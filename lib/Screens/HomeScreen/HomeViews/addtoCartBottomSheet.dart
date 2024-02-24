@@ -8,7 +8,8 @@ import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:sizer/sizer.dart';
 
 class addToCartBottomSheet extends StatefulWidget {
-  addToCartBottomSheet({super.key});
+  OfferModel offer;
+  addToCartBottomSheet({super.key, required this.offer});
 
   @override
   State<addToCartBottomSheet> createState() => _addToCartBottomSheetState();
@@ -94,7 +95,7 @@ class _addToCartBottomSheetState extends State<addToCartBottomSheet> {
                     height: 1,
                     color: Appc.LightGery,
                   ),
-                  for (var data in hctrl.selectedOfferModel!.items!)
+                  for (var data in widget.offer!.items!)
                     Container(
                       height: 5.88.h,
                       alignment: Alignment.centerLeft,
@@ -166,7 +167,8 @@ class _addToCartBottomSheetState extends State<addToCartBottomSheet> {
           InkWell(
             onTap: () {
               for (var data in selectedItem) {
-                hctrl.addToCard(data.itemid!, data.itemname!, data.image!);
+                hctrl.addToCard(
+                    data.itemid!, data.itemname!, data.image!, widget.offer);
               }
               print("Working");
               Get.back();

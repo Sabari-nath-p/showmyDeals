@@ -18,6 +18,15 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
+
+icons_launcher:
+  image_path: "lib/Base/Assets/Images/icon.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+
 environment:
   sdk: ">=3.0.6 <4.0.0"
 
@@ -57,6 +66,11 @@ dependencies:
   animate_do: ^3.3.3
   flutter_timer_countdown: ^1.0.7
   odometer: ^3.0.0
+  carousel_slider: ^4.2.1
+  shimmer: ^3.0.0
+  glowy_borders: ^1.0.2
+  icons_launcher: ^2.1.7
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
@@ -85,9 +99,12 @@ flutter:
   assets:
     - lib/Base/Assets/Images/
     - lib/Base/Assets/
+    - lib/Base/Assets/Images/icon.png
    
   #   - images/a_dot_ham.jpeg
 
+
+  
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

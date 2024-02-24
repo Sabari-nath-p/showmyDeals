@@ -14,6 +14,7 @@ import 'package:show_my_deals/Screens/HomeScreen/Models/JobModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/OfferModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/OutletModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/TagModel.dart';
+import 'package:show_my_deals/Screens/HomeScreen/Models/TagModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/hiveDataModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/shopDetailedModel.dart';
 import 'package:show_my_deals/appConfig.dart';
@@ -25,14 +26,18 @@ class HomeController extends GetxController {
   List<OfferModel> offerList = [];
   List<JobModel> jobList = [];
   List<OutletModel> outletList = [];
+  ContentModel? contentModel;
   TagModel? selectedTag;
   Box? CardDb;
   List<CartDataModel> CartList = [];
-
+  String bottomSelected = "homeIcon.png";
+  String selectedStoreTag = "";
   OfferModel? selectedOfferModel;
   OutletModel? selectOutletModel;
   OutletDetailedModel? outlet;
   JobModel? selectedJobModel;
+  String name = "";
+  String id = "";
 
   var header = {
     'Accept': 'application/json',
@@ -53,6 +58,8 @@ class HomeController extends GetxController {
 
     if (Respose.statusCode == 200) {
       print(Respose.body);
+      var data = json.decode(Respose.body);
+      contentModel = ContentModel.fromJson(data);
       for (var data in json.decode(Respose.body)["tags"]) {
         tgModelList.add(TagModel.fromJson(data));
       }
@@ -63,7 +70,7 @@ class HomeController extends GetxController {
 
   loadOffers() async {
     offerList.clear();
-    String temTag = selectedTag == null ? "" : "?tag=${selectedTag}";
+    String temTag = selectedTag == null ? "" : "?tag=${selectedTag!.tag}";
     final Respose = await get(
         Uri.parse(AppConfig.endpoint + "$selectedDistrict/offers" + temTag),
         headers: header);
@@ -137,7 +144,9 @@ class HomeController extends GetxController {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     CardDb = await Hive.openBox("CART");
     selectedDistrict = preferences.getString("DISTRICT");
-    update();
+    name = preferences.getString("NAME").toString();
+    id = preferences.getString("ID").toString();
+    if (selectedDistrict == "") update();
 
     loadTags();
     loadOffers();
@@ -229,15 +238,15 @@ class HomeController extends GetxController {
     }
   }
 
-  addToCard(String id, String name, String image) {
+  addToCard(String id, String name, String image, OfferModel offer) {
     CartDataModel model = CartDataModel(
       itemID: id,
       itemName: name,
       ImageUrl: image,
-      offerName: selectedOfferModel!.name,
-      offerID: selectedOfferModel!.id.toString(),
-      from: selectedOfferModel!.from.toString(),
-      to: selectedOfferModel!.from.toString(),
+      offerName: offer.name,
+      offerID: offer.id.toString(),
+      from: offer.from.toString(),
+      to: offer.from.toString(),
     );
 
     CardDb!.put(id, model);
@@ -250,6 +259,29 @@ class HomeController extends GetxController {
     CartList.remove(model);
     CardDb!.delete(id);
     update();
+  }
+
+  bool editProfile = false;
+
+  editProfileDetails(String n) async {
+    final Response = await post(Uri.parse(AppConfig.endpoint + "user/details"),
+        body: json.encode({"id": id, " district": selectedDistrict, "name": n}),
+        headers: {
+          "Content-Type": "application/json",
+        });
+    print(Response.body);
+    print(Response.statusCode);
+    editProfile = false;
+    update();
+    if (Response.statusCode == 200) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString("NAME", n);
+      pref.setString("DISTRICT", selectedDistrict!);
+      pref.setString("LOGIN", "IN");
+      name = n;
+      update();
+      Get.back();
+    }
   }
 
   @override

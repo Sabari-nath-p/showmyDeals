@@ -8,7 +8,9 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Views/OTPVerificationScreen.dart';
 import 'package:show_my_deals/Screens/AuthenticationScreen/Views/OnBoardingView.dart';
+import 'package:show_my_deals/Screens/Game/controller.dart';
 import 'package:show_my_deals/Screens/HomeScreen/DashBoard.dart';
+import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:show_my_deals/appConfig.dart';
 import 'package:show_my_deals/main.dart';
 import 'package:show_my_deals/src/FlashMessage.dart';
@@ -62,16 +64,23 @@ class AuthenticationController extends GetxController {
         });
     print(Response.body);
     print(Response.statusCode);
+    Loading = false;
+    update();
     if (Response.statusCode == 200) {
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setString("NAME", nameController.text);
       pref.setString("DISTRICT", SelectedDistrict!);
       pref.setString("LOGIN", "IN");
+      HomeController hctrl = Get.put(HomeController());
+      GameController gctrl = Get.put(GameController());
+
       Get.offAll(() => DashBoardScreen(), transition: Transition.rightToLeft);
     }
   }
 
   verifyOtp() async {
+    Loading = true;
+    update();
     final Response = await post(Uri.parse(AppConfig.endpoint + "user/otp"),
         body: json.encode({
           "phone": PhoneController.text.trim(),
@@ -93,8 +102,10 @@ class AuthenticationController extends GetxController {
         userDate = data["user"];
         if (!data["collectData"]) {
           pref.setString("NAME", data["user"]["name"]);
-          pref.setString("DISTRICT", data["user"]["district"]);
+          pref.setString("DISTRICT", DistrictList.first);
           pref.setString("LOGIN", "IN");
+          HomeController hctrl = Get.put(HomeController());
+          GameController gctrl = Get.put(GameController());
           Get.offAll(() => DashBoardScreen(),
               transition: Transition.rightToLeft);
         } else {
@@ -119,15 +130,20 @@ class AuthenticationController extends GetxController {
 
   SendOtp() async {
     Loading = true;
+    update();
     ResponseData response =
         await GFetch("user/otp?phone=${PhoneController.text.trim()}");
-    Loading = false;
+
     print(response.data);
     if (response.isSucess) {
       // TOP = response.data["top"];
       OtpController.text = "";
+      Loading = false;
       update();
       Get.to(() => OTPVerificationScreen(), transition: Transition.rightToLeft);
+    } else {
+      Loading = false;
+      update();
     }
   }
 }

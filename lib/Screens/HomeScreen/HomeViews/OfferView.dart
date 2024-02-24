@@ -12,9 +12,15 @@ import 'package:sizer/sizer.dart';
 
 class OfferView extends StatelessWidget {
   List<OfferModel>? OfferList = [];
-  List<Offers>? offerList2 = [];
+  List<OfferModel>? offerList2 = [];
   String? title = "";
-  OfferView({super.key, this.OfferList, this.offerList2, this.title = ""});
+  bool isHeading;
+  OfferView(
+      {super.key,
+      this.OfferList,
+      this.offerList2,
+      this.title = "",
+      this.isHeading = true});
   HomeController hctrl = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
@@ -34,31 +40,11 @@ class OfferView extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          hctrl.selectedTag = null;
-                          hctrl.update();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  right: BorderSide(color: Appc.LightGery))),
-                          child: Text(
-                            "All",
-                            style: GoogleFonts.poppins(
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w400,
-                                color: (hctrl.selectedTag == null)
-                                    ? Appc.PrimaryColor
-                                    : Color(0xffA8A8A8)),
-                          ),
-                        ),
-                      ),
-                      for (var data in hctrl.tgModelList)
+                      if (isHeading)
                         InkWell(
                           onTap: () {
-                            hctrl.selectedTag = data;
+                            hctrl.selectedTag = null;
+                            hctrl.loadOffers();
                             hctrl.update();
                           },
                           child: Container(
@@ -67,16 +53,41 @@ class OfferView extends StatelessWidget {
                                 border: Border(
                                     right: BorderSide(color: Appc.LightGery))),
                             child: Text(
-                              data.name!,
+                              "All",
                               style: GoogleFonts.poppins(
                                   fontSize: 10.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: (hctrl.selectedTag == data)
+                                  color: (hctrl.selectedTag == null)
                                       ? Appc.PrimaryColor
                                       : Color(0xffA8A8A8)),
                             ),
                           ),
                         ),
+                      if (isHeading)
+                        for (var data in hctrl.tgModelList)
+                          InkWell(
+                            onTap: () {
+                              hctrl.selectedTag = data;
+                              hctrl.loadOffers();
+                              hctrl.update();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      right:
+                                          BorderSide(color: Appc.LightGery))),
+                              child: Text(
+                                data.name!,
+                                style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: (hctrl.selectedTag == data)
+                                        ? Appc.PrimaryColor
+                                        : Color(0xffA8A8A8)),
+                              ),
+                            ),
+                          ),
                     ],
                   ),
                 ),
@@ -107,7 +118,7 @@ class OfferView extends StatelessWidget {
                     (title != "")
                         ? "All  Deals  in $title"
                         : (hctrl.selectedTag == null)
-                            ? "All  Deals  in Kozhikode"
+                            ? "All  Deals  in ${hctrl.selectedDistrict.toString().capitalizeFirst.toString()}"
                             : "${hctrl.selectedTag!.name!.toString().capitalizeFirst} in ${hctrl.selectedDistrict.toString().capitalizeFirst}",
                     style: GoogleFonts.poppins(
                         fontSize: 10.sp,
@@ -133,7 +144,7 @@ class OfferView extends StatelessWidget {
                           OfferCard(
                             offerData: data,
                           ),
-                      if (title != "")
+                      if (title != "" && offerList2 != null)
                         for (var data in offerList2!)
                           OfferCard(
                             offerData: OfferModel.fromJson(data.toJson()),

@@ -3,14 +3,17 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:confetti/confetti.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:show_my_deals/Screens/AuthenticationScreen/AuthenticationScreenMain.dart';
 import 'package:show_my_deals/Screens/Game/spinnerItem.dart';
 import 'package:show_my_deals/appConfig.dart';
+import 'package:show_my_deals/src/FlashMessage.dart';
 import 'package:show_my_deals/src/InitialiseData.dart';
 
 class GameController extends GetxController {
@@ -23,6 +26,9 @@ class GameController extends GetxController {
   bool ClaimButton = false;
   bool ClaimLoading = false;
   bool spinnerLoading = false;
+  bool deleteAccountLoading = false;
+
+  List<Items> voucherList = [];
 
   SpinContentModel? spinItem;
   ConfettiController ctrl = ConfettiController();
@@ -42,7 +48,7 @@ class GameController extends GetxController {
           "Content-Type": "application/json",
         },
         body: json.encode(
-            {"id": id, "secret": sid, "coin": Fortune.randomInt(50, 300)}));
+            {"id": id, "secret": sid, "coin": Fortune.randomInt(300, 1000)}));
     print(Response.body);
     if (Response.statusCode == 202 || Response.statusCode == 200) {
       loadUserCoin();
@@ -80,6 +86,34 @@ class GameController extends GetxController {
 
       coin = js["coin"];
       print("updating");
+      update();
+    } else {
+      Get.back();
+      FlashMessage(
+          "Token Expired", "your login token has been expired please login");
+    }
+  }
+
+  loadUserVoucher() async {
+    // coinCount.value = 0;
+
+    voucherList.clear();
+    final Response = await get(
+      Uri.parse(
+        AppConfig.endpoint + "user/rewards?id=$id&secret=$sid",
+      ),
+    );
+    log("Request --> " +
+        AppConfig.endpoint +
+        "user/rewards?id=$id&secret=$sid" +
+        " -->" +
+        Response.statusCode.toString());
+
+    if (Response.statusCode == 200) {
+      var js = json.decode(Response.body);
+      for (var data in js["rewards"]) {
+        voucherList.add(Items.fromJson(data));
+      }
       update();
     }
   }
@@ -119,6 +153,7 @@ class GameController extends GetxController {
     loadSpnningItem();
     loadUserCoin();
     getCurrentDateTime();
+    loadUserVoucher();
     refreshController.refreshCompleted();
     update();
   }
@@ -134,13 +169,13 @@ class GameController extends GetxController {
       if (Response.statusCode == 200) {
         var js = json.decode(Response.body);
         int current = js["time"];
-        if ((lastSpin + 20) < current) {
-          // if ((lastSpin + 14400) < current) {
+        // if ((lastSpin + 20) < current) {
+        if ((lastSpin + 14400) < current) {
           ClaimButton = true;
           update();
         } else {
           ClaimButton = false;
-          lastSpin = lastSpin + 10; //14400;
+          lastSpin = lastSpin + 14400;
           counterDuration =
               DateTime.now().add(Duration(seconds: lastSpin - current));
           update();
@@ -149,6 +184,41 @@ class GameController extends GetxController {
     } else {
       ClaimButton = true;
       update();
+    }
+  }
+
+  deleteAccount() async {
+    deleteAccountLoading = true;
+    update();
+    final Response = await post(
+        Uri.parse(
+          AppConfig.endpoint + "user/deleteaccount",
+        ),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json.encode({"id": id, "secret": sid}));
+
+    log("Request --> " +
+        AppConfig.endpoint +
+        "user/rewards?id=$id&secret=$sid" +
+        " -->" +
+        Response.statusCode.toString());
+
+    print(Response.body);
+    print(Response.statusCode);
+    deleteAccountLoading = false;
+    update();
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    if (Response.statusCode == 200) {
+      pref.setString("LOGIN", "OUT");
+      FlashMessage("Successfull", "your account will be deleted shortly");
+      Get.offAll(() => AuthenticationScreen(),
+          transition: Transition.rightToLeft);
+    } else {
+      FlashMessage("Deletion Successfully failed",
+          "Your account has been failed due to uncounted error");
     }
   }
 

@@ -54,6 +54,8 @@ class Items {
   String? text;
   String? expiry;
   String? image;
+  String? link;
+  bool? active;
 
   Items(
       {this.id,
@@ -61,7 +63,9 @@ class Items {
       this.heading,
       this.text,
       this.expiry,
-      this.image});
+      this.image,
+      this.link,
+      this.active});
 
   Items.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -70,6 +74,8 @@ class Items {
     text = json['text'];
     expiry = json['expiry'];
     image = json['image'];
+    link = json['link'];
+    active = json['active'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +86,8 @@ class Items {
     data['text'] = this.text;
     data['expiry'] = this.expiry;
     data['image'] = this.image;
+    data['link'] = this.link;
+    data['active'] = this.active;
     return data;
   }
 }

@@ -36,8 +36,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     "profileIcon.png"
   ];
 
-  String bottomSelected = "homeIcon.png";
-
   HomeController hctrl = Get.put(HomeController());
   GameController ctrl = Get.put(GameController());
 
@@ -46,9 +44,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     return Scaffold(
       appBar: CappBar(),
       body: GetBuilder<HomeController>(builder: (_) {
+        print(hctrl.selectedDistrict);
         return Stack(
           children: [
-            if (bottomSelected == listIcon[0])
+            if (hctrl.bottomSelected == listIcon[0])
               Positioned(
                 top: 0,
                 right: 0,
@@ -57,28 +56,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (hctrl.selectedOfferModel != null)
-                      Expanded(child: OfferDetailedView())
-                    else if (hctrl.selectedJobModel != null)
-                      Expanded(child: JobDetailedScreen())
-                    else if (hctrl.selectOutletModel != null)
-                      Expanded(child: ShopDetailedPage())
-                    else
-                      Expanded(child: HomeScreen())
+                    // if (hctrl.selectedOfferModel != null)
+                    //   Expanded(child: OfferDetailedView())
+
+                    Expanded(child: HomeScreen())
                   ],
                 ),
               ),
-            if (bottomSelected == listIcon[1])
+            if (hctrl.bottomSelected == listIcon[1])
               Positioned(
                   top: 0, right: 0, left: 0, bottom: 0, child: AddBagScreen()),
-            if (bottomSelected == listIcon[2])
+            if (hctrl.bottomSelected == listIcon[2])
               Positioned(
                   top: 0,
                   right: 0,
                   left: 0,
                   bottom: 0,
                   child: GameSpinningView()),
-            if (bottomSelected == listIcon[4])
+            if (hctrl.bottomSelected == listIcon[4])
               Positioned(child: ProfileSettingScreen()),
             Positioned(
                 bottom: 0,
@@ -107,7 +102,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           InkWell(
                             onTap: () {
                               setState(() {
-                                bottomSelected = data;
+                                hctrl.bottomSelected = data;
                               });
                             },
                             child: Container(
@@ -117,7 +112,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               child: Image.asset(
                                 "lib/Base/Assets/Images/$data",
                                 //fit: BoxFit.fill,
-                                color: (bottomSelected == data)
+                                color: (hctrl.bottomSelected == data)
                                     ? Appc.PrimaryColor
                                     : Colors.white,
                               ),

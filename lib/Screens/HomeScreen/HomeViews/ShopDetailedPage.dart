@@ -1,31 +1,71 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:show_my_deals/Base/AppColor.dart';
+import 'package:show_my_deals/Screens/HomeScreen/HomeViews/ShimmerScreen/shopDetailedPage.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/OfferModel.dart';
+import 'package:show_my_deals/Screens/HomeScreen/Models/shopDetailedModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:show_my_deals/Screens/HomeScreen/HomeViews/OfferView.dart';
+import 'package:show_my_deals/appConfig.dart';
 import 'package:show_my_deals/main.dart';
 import 'package:show_my_deals/src/SMDappBar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ShopDetailedPage extends StatelessWidget {
-  ShopDetailedPage({super.key});
+import '../../../src/FlashMessage.dart';
+
+class ShopDetailedPage extends StatefulWidget {
+  String shopid;
+  ShopDetailedPage({super.key, required this.shopid});
+
+  @override
+  State<ShopDetailedPage> createState() => _ShopDetailedPageState();
+}
+
+class _ShopDetailedPageState extends State<ShopDetailedPage> {
   HomeController hctrl = Get.put(HomeController());
+
+  OutletDetailedModel? outlet;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadShop();
+  }
+
+  loadShop() async {
+    final Respose = await get(
+        Uri.parse(AppConfig.endpoint +
+            "${hctrl.selectedDistrict}/outlet/${widget.shopid}"),
+        headers: hctrl.header);
+    log("Request -->" +
+        AppConfig.endpoint +
+        "${hctrl.selectedDistrict}/outlet/${widget.shopid}" +
+        " --> ${Respose.statusCode}");
+    print(Respose.body);
+
+    if (Respose.statusCode == 200) {
+      outlet = OutletDetailedModel.fromJson(json.decode(Respose.body));
+      setState(() {});
+    } else {
+      FlashMessage("Store unavaliable",
+          "Something went worng. Please try after some time");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        hctrl.selectOutletModel = null;
-        hctrl.outlet = null;
-        hctrl.update();
-      },
-      child: (hctrl.outlet == null)
-          ? Container()
+    return Scaffold(
+      appBar: CappBar(isBack: true),
+      body: (outlet == null)
+          ? ShopDetailedPageShimmer()
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -51,7 +91,7 @@ class ShopDetailedPage extends StatelessWidget {
                               width: 100.w,
                               height: 19.29.h,
                               child: Image.network(
-                                hctrl.outlet!.store!.images!.bg!.url!,
+                                outlet!.store!.images!.bg!.url!,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -75,7 +115,7 @@ class ShopDetailedPage extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
-                                      hctrl.outlet!.store!.images!.logo!.url!,
+                                      outlet!.store!.images!.logo!.url!,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -87,7 +127,7 @@ class ShopDetailedPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      hctrl.outlet!.store!.name
+                                      outlet!.store!.name
                                           .toString()
                                           .capitalizeFirst
                                           .toString(),
@@ -104,7 +144,7 @@ class ShopDetailedPage extends StatelessWidget {
                                           color: Appc.PrimaryColor,
                                         ),
                                         Text(
-                                          hctrl.outlet!.district
+                                          outlet!.district
                                               .toString()
                                               .capitalizeFirst
                                               .toString(),
@@ -129,7 +169,7 @@ class ShopDetailedPage extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     launchUrl(Uri.parse(
-                                        "tel:+91${hctrl.outlet!.store!.contact!.phone}"));
+                                        "tel:+91${outlet!.store!.contact!.phone}"));
                                   },
                                   child: Container(
                                     width: 42.w,
@@ -150,7 +190,7 @@ class ShopDetailedPage extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     launchUrl(Uri.parse(
-                                        "${hctrl.outlet!.store!.contact!.googleMap}"));
+                                        "${outlet!.store!.contact!.googleMap}"));
                                   },
                                   child: Container(
                                     width: 42.w,
@@ -176,10 +216,20 @@ class ShopDetailedPage extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
+                  if (!outlet!.activeOffers!.isEmpty)
+                    OfferView(
+                      // OfferList: outlet!.offers as List<OfferModel>,
+                      offerList2: outlet!.activeOffers,
+                      title: outlet!.store!.name
+                          .toString()
+                          .capitalizeFirst
+                          .toString(),
+                    ),
                   OfferView(
-                    // OfferList: hctrl.outlet!.offers as List<OfferModel>,
-                    offerList2: hctrl.outlet!.offers,
-                    title: hctrl.outlet!.store!.name
+                    // OfferList: outlet!.offers as List<OfferModel>,
+                    offerList2: outlet!.oldOffers,
+                    isHeading: outlet!.activeOffers!.isEmpty,
+                    title: outlet!.store!.name
                         .toString()
                         .capitalizeFirst
                         .toString(),

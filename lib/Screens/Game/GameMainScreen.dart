@@ -39,7 +39,7 @@ class _GameSpinningViewState extends State<GameSpinningView> {
     Color(0xffFA912C),
     Color(0xff00B88F),
   ];
-
+  final ScrollController scrollController = ScrollController();
   StreamController<int> spinController = StreamController<int>();
 
   GameController gctrl = Get.put(GameController());
@@ -50,6 +50,7 @@ class _GameSpinningViewState extends State<GameSpinningView> {
     //  gctrl.fetchData();
     return GetBuilder<GameController>(builder: (_) {
       return SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -70,10 +71,19 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                           color: Colors.white),
                     ),
                   ),
-                  SizedBox(
-                    width: 21.05.w,
-                    child:
-                        Image.asset("lib/Base/Assets/Images/collectCoin.png"),
+                  InkWell(
+                    onTap: () {
+                      scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.fastOutSlowIn,
+                      );
+                    },
+                    child: SizedBox(
+                      width: 21.05.w,
+                      child:
+                          Image.asset("lib/Base/Assets/Images/collectCoin.png"),
+                    ),
                   )
                 ],
               ),
@@ -122,8 +132,13 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.to(() => RewardScreen(),
-                        transition: Transition.rightToLeft);
+                    if (gctrl.voucherList.length > 0)
+                      Get.to(() => RewardScreen(),
+                          transition: Transition.rightToLeft);
+                    else {
+                      FlashMessage(
+                          "No Reward avalible", "Currently no reward avalible");
+                    }
                   },
                   child: Container(
                     height: 3.5.h,
@@ -145,6 +160,9 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                   width: 4.2.w,
                 ),
               ],
+            ),
+            SizedBox(
+              height: 2.h,
             ),
             if (gctrl.spinItem != null)
               SizedBox(
@@ -230,12 +248,14 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                     gctrl.update();
 
                                     gctrl.spinnerLoading = false;
-                                    gctrl.coin = gctrl.coin - 1000;
+                                    //gctrl.coin = gctrl.coin - 1000;
+                                    gctrl.loadUserCoin();
+                                    gctrl.loadUserVoucher();
                                     gctrl.update();
-
+                                    dialog(context, selectedIndex);
                                     await Future.delayed(Duration(seconds: 4));
                                     gctrl.ctrl.stop();
-                                    dialog(context, selectedIndex);
+
                                     gctrl.update();
                                   },
                                   items: [
@@ -248,7 +268,9 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                                 .indexOf(data)],
                                             borderColor: Colors.transparent),
                                         child: Text(
-                                          data.heading.toString().toUpperCase(),
+                                          data.smallText
+                                              .toString()
+                                              .toUpperCase(),
                                           style:
                                               GoogleFonts.lexend(fontSize: 8),
                                         ),
@@ -262,6 +284,28 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                   color: Appc.PrimaryColor, width: 3.w)),
                         )),
 
+                    Positioned(
+                        top: 17.82.h,
+                        //bottom: 0,
+                        right: 0,
+                        left: 0,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(-.5, 1),
+                                      color: Colors.black54,
+                                      spreadRadius: .4,
+                                      blurRadius: 1)
+                                ],
+                                color: Colors.white),
+                          ),
+                        )),
                     Positioned(
                         bottom: 19.29.h,
                         left: 16.57.w,
@@ -362,6 +406,19 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                     "Minimum 1000 coin is required to spin. Claim coin by daily reward");
                               }
                             })),
+
+                    Positioned(
+                        bottom: 1.h,
+                        left: 10,
+                        right: 10,
+                        child: Text(
+                          "1000 coins / spin",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 8.sp),
+                        )),
                     Positioned(
                         top: 10,
                         left: 10,
