@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "715269274287",
+    "project_id": "showmydeals-app",
+    "storage_bucket": "showmydeals-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715269274287:android:cde8ffe3db0e301613f25a",
+        "android_client_info": {
+          "package_name": "com.fugipie.showmydeals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADl7Sor_rrYKLcTAXUHP_ygixLBfQ655o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

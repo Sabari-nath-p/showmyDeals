@@ -1,6 +1,9 @@
-package com.example.show_my_deals
+package com.fugipie.showmydeals
 
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity() {
+
+
+
 }
