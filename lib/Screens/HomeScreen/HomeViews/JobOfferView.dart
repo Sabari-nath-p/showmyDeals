@@ -120,16 +120,17 @@ class _JobOfferViewState extends State<JobOfferView> {
                 ),
                 Container(
                   width: 100.w,
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.center,
                   child: Wrap(
-                    spacing: 5.w,
-                    runSpacing: 3.w,
-                    crossAxisAlignment: WrapCrossAlignment.start,
+                    spacing: 10,
+                    runSpacing: 10,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     runAlignment: WrapAlignment.center,
-                    alignment: WrapAlignment.start,
+                    alignment: WrapAlignment.center,
                     children: [
                       for (var data in hctrl.jobList)
-                        if (data.districts!.contains(SelectedDistrict))
+                        if (data.districts!.contains(SelectedDistrict) ||
+                            SelectedDistrict == "")
                           InkWell(
                             onTap: () {
                               Get.to(
@@ -139,8 +140,8 @@ class _JobOfferViewState extends State<JobOfferView> {
                                   transition: Transition.rightToLeft);
                             },
                             child: Container(
-                              width: 41.54.w,
-                              height: 26.35.h,
+                              width: 150,
+                              height: 230,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20)),
                               child: ClipRRect(

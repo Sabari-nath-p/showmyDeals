@@ -6,6 +6,7 @@ import 'package:show_my_deals/Base/AppColor.dart';
 import 'package:show_my_deals/Screens/HomeScreen/HomeViews/offerDetailedView.dart';
 import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
 import 'package:show_my_deals/main.dart';
+import 'package:show_my_deals/src/FlashMessage.dart';
 import 'package:sizer/sizer.dart';
 
 class AddBagScreen extends StatelessWidget {
@@ -30,14 +31,21 @@ class AddBagScreen extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     print(data.offerID);
-                    Get.to(
-                        () =>
-                            OfferDetailedView(offerID: data.offerID.toString()),
-                        transition: Transition.rightToLeft);
+                    if (data.to!.compareTo(DateTime.now().toString()) > 0)
+                      Get.to(
+                          () => OfferDetailedView(
+                              offerID: data.offerID.toString()),
+                          transition: Transition.rightToLeft);
+                    else {
+                      FlashMessage("Oops! Offer expired",
+                          "Looks like the offer has zipped away!");
+                      hctrl.removeFromCart(data.itemID!);
+                    }
                   },
                   child: Container(
                     width: 92.01.w,
-                    height: 6.7.h,
+                    //    height: 6.7.h,
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     margin: EdgeInsets.symmetric(vertical: 5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),

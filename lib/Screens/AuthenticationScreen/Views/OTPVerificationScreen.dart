@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -13,11 +14,16 @@ import 'package:show_my_deals/src/SMDappBar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OTPVerificationScreen extends StatelessWidget {
+class OTPVerificationScreen extends StatefulWidget {
   OTPVerificationScreen({super.key});
 
-  AuthenticationController authctrl = Get.put(AuthenticationController());
+  @override
+  State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+}
 
+class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  AuthenticationController authctrl = Get.put(AuthenticationController());
+  bool isResendOtp = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,25 +80,59 @@ class OTPVerificationScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Didn’t Receive ?",
-                          style: GoogleFonts.poppins(
-                              fontSize: 12.5.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            authctrl.SendOtp();
-                          },
-                          child: Text(
-                            " Resent",
+                        if (!authctrl.counterDateTime.isAfter(DateTime.now()))
+                          Text(
+                            "Didn’t Receive ?",
                             style: GoogleFonts.poppins(
                                 fontSize: 12.5.sp,
                                 fontWeight: FontWeight.w500,
-                                color: Appc.PrimaryColor),
+                                color: Colors.black),
                           ),
-                        ),
+                        if (authctrl.counterDateTime.isAfter(DateTime.now()))
+                          Text(
+                            " Resend OTP in ",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12.5.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          ),
+                        if (authctrl.counterDateTime.isAfter(DateTime.now()))
+                          TimerCountdown(
+                            format: CountDownTimerFormat.secondsOnly,
+                            endTime: authctrl.counterDateTime,
+                            enableDescriptions: false,
+                            timeTextStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600),
+                            spacerWidth: .4.w,
+                            onEnd: () {
+                              // gctrl.ClaimButton = true;
+                              // gctrl.ClaimLoading = false;
+                              // gctrl.counterDuration = null;
+                              // gctrl.update();
+                              authctrl.update();
+                            },
+                          ),
+                        if (authctrl.counterDateTime.isAfter(DateTime.now()))
+                          Text(
+                            " second",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12.5.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          ),
+                        if (authctrl.counterDateTime.isBefore(DateTime.now()))
+                          InkWell(
+                            onTap: () {
+                              authctrl.SendOtp();
+                            },
+                            child: Text(
+                              " Resent",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12.5.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Appc.PrimaryColor),
+                            ),
+                          ),
                       ],
                     ),
                     SizedBox(
@@ -146,7 +186,7 @@ class OTPVerificationScreen extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    launchUrl(Uri.parse("tel:" + AppConfig.contactNumber));
+                    launchUrl(Uri.parse("https://showmydeals.in/contact"));
                   },
                   child: Text(
                     "Contact Us",

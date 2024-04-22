@@ -13,7 +13,7 @@ class OutletModel {
   List<GroupMembers>? groupMembers;
   bool? active;
   String? storeType;
-  int? priority;
+  //int? priority;
   bool? popular;
   int? latestUpdate;
   int? iV;
@@ -33,7 +33,7 @@ class OutletModel {
       this.groupMembers,
       this.active,
       this.storeType,
-      this.priority,
+      // this.priority,
       this.popular,
       this.latestUpdate,
       this.iV});
@@ -59,7 +59,7 @@ class OutletModel {
     }
     active = json['active'];
     storeType = json['storeType'];
-    priority = json['priority'];
+    //  priority = json['priority'];
     popular = json['popular'];
     latestUpdate = json['latestUpdate'];
     iV = json['__v'];
@@ -85,7 +85,7 @@ class OutletModel {
     }
     data['active'] = this.active;
     data['storeType'] = this.storeType;
-    data['priority'] = this.priority;
+    //  data['priority'] = this.priority;
     data['popular'] = this.popular;
     data['latestUpdate'] = this.latestUpdate;
     data['__v'] = this.iV;

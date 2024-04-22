@@ -1,0 +1,16 @@
+{
+    "applinks": {
+        "apps": [],
+        "defaults": { "percentEncoded": false },  
+        "details": [
+             {
+                "appID": "7KAA9GVRR9.com.fugipie.showmydeals",
+               "paths": [ "*" ],
+              
+               "components": [
+                   { "/": "/*" }
+               ]
+             }
+         ]
+     }
+  }

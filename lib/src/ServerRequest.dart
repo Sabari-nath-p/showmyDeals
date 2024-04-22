@@ -24,7 +24,7 @@ Future<ResponseData> GFetch(String endpoint, {var header = null}) async {
     var data = json.decode(Respose.body);
     return ResponseData(isSucess: true, data: data);
   } else {
-    FlashMessage("Oops!", " We apologize for the inconvenience");
+    FlashMessage("OTP limit reached", "Please try after some time");
     return ResponseData(isSucess: false);
   }
   // } catch (e) {

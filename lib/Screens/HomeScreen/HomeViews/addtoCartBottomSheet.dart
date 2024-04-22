@@ -181,7 +181,7 @@ class _addToCartBottomSheetState extends State<addToCartBottomSheet> {
                           color: Colors.transparent,
                           child: Container(
                             width: 82.89.w,
-                            height: 29.69.h,
+                            height: 33.69.h,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),

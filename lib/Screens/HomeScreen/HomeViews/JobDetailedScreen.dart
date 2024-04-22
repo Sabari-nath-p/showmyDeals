@@ -1,8 +1,12 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:show_my_deals/Base/AppColor.dart';
 import 'package:show_my_deals/Screens/HomeScreen/Models/JobModel.dart';
 import 'package:show_my_deals/Screens/HomeScreen/service/HomeController.dart';
@@ -29,32 +33,40 @@ class JobDetailedScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  width: 14.21.w,
-                  height: 2.9.h,
-                  child: Icon(
-                    Icons.favorite_border_outlined,
-                    color: Colors.white,
-                    size: 20,
+                if (false)
+                  Container(
+                    width: 14.21.w,
+                    height: 2.9.h,
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Appc.PrimaryColor),
                   ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Appc.PrimaryColor),
-                ),
                 SizedBox(
                   width: 10,
                 ),
-                Container(
-                  width: 14.21.w,
-                  height: 2.9.h,
-                  child: Icon(
-                    Icons.share_outlined,
-                    color: Colors.white,
-                    size: 20,
+                InkWell(
+                  onTap: () {
+                    print("working");
+                    Share.share(
+                        'Checkout this job from showmydeals https://www.showmydeals.in/${model.districts!.first.toString()}/jobs/${model!.id!}');
+                  },
+                  child: Container(
+                    width: 14.21.w,
+                    height: 2.9.h,
+                    child: Icon(
+                      Icons.share_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Appc.PrimaryColor),
                   ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Appc.PrimaryColor),
                 ),
                 SizedBox(
                   width: 10,
@@ -69,25 +81,73 @@ class JobDetailedScreen extends StatelessWidget {
               width: 92.1.w,
               height: 47.17.h,
               padding: EdgeInsets.only(
-                  left: 10.78.w, right: 10.78.w, top: 2.8.h, bottom: 4.8.h),
+                  left: 1.78.w, right: 1.78.w, top: 2.8.h, bottom: 2.8.h),
               alignment: Alignment.center,
-              child: (model.pages!.length > 0)
-                  ? Container(
-                      width: 92.1.w,
-                      height: 47.17.h,
-                      child: Image.network(model.pages!.first!),
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                    )
-                  : FanCarouselImageSlider(
-                      imagesLink: model.pages!,
-                      isAssets: false,
-                      sliderHeight: 47.17.h,
-                      imageRadius: 5,
-                      sliderWidth: 92.1.w,
-                      //showArrowNav: true,
-                      imageFitMode: BoxFit.fill,
-                    ),
+              child: CarouselSlider(
+                  items: [
+                    for (var data in model.pages!)
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                              // barrierColor: Colors.white10,
+                              context: context,
+                              builder: (_) => Material(
+                                    color: Colors.white12,
+                                    child: Container(
+                                      width: 100.w,
+                                      height: 100.h,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            top: 0,
+                                            bottom: 0,
+                                            right: 0,
+                                            left: 0,
+                                            child: Container(
+                                              width: 95.w,
+                                              height: 96.h,
+                                              child: PhotoView(
+                                                maxScale: .6,
+                                                initialScale:
+                                                    PhotoViewComputedScale
+                                                        .contained,
+                                                minScale: PhotoViewComputedScale
+                                                    .contained,
+                                                imageProvider:
+                                                    NetworkImage(data),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                              right: 10,
+                                              top: 10,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Get.back();
+                                                },
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                  ));
+                        },
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              data,
+                              fit: BoxFit.fill,
+                            )),
+                      )
+                  ],
+                  options: CarouselOptions(
+                      enlargeCenterPage: true,
+                      height: 42.82.h,
+                      autoPlay: true,
+                      viewportFraction: .8)),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: Color(0xffF6F8FF)),
@@ -135,52 +195,58 @@ class JobDetailedScreen extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Avaliable in :  ",
-                        style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Appc.PrimaryColor),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "${model.districts!.join(', ')}",
+                  if (false)
+                    Row(
+                      children: [
+                        Text(
+                          "Avaliable in :  ",
                           style: GoogleFonts.poppins(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black),
+                              color: Appc.PrimaryColor),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Location :  ",
-                        style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Appc.PrimaryColor),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "${model.location!}",
+                        Expanded(
+                          child: Text(
+                            "${model.districts!.join(', ')}",
+                            style: GoogleFonts.poppins(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (false)
+                    Row(
+                      children: [
+                        Text(
+                          "Location :  ",
                           style: GoogleFonts.poppins(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black),
+                              color: Appc.PrimaryColor),
                         ),
-                      ),
-                    ],
-                  ),
+                        Expanded(
+                          child: Text(
+                            "${model.location!}",
+                            style: GoogleFonts.poppins(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
                   SizedBox(
                     height: 10.9.h,
                   ),
                   InkWell(
                     onTap: () {
-                      launchUrl(Uri.parse(model.applyLink!));
+                      launchUrl(
+                          Uri.parse(
+                            model.applyLink!,
+                          ),
+                          mode: LaunchMode.externalApplication);
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 6.8.w),
@@ -190,7 +256,7 @@ class JobDetailedScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           color: Appc.PrimaryColor),
                       child: Text(
-                        "Continue",
+                        "Apply Now",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                             color: Colors.white,

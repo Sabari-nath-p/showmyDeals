@@ -228,7 +228,7 @@ class _ShopDetailedPageState extends State<ShopDetailedPage> {
                   OfferView(
                     // OfferList: outlet!.offers as List<OfferModel>,
                     offerList2: outlet!.oldOffers,
-                    isHeading: outlet!.activeOffers!.isEmpty,
+                    isHeading: false, // outlet!.activeOffers!.isEmpty,
                     title: outlet!.store!.name
                         .toString()
                         .capitalizeFirst

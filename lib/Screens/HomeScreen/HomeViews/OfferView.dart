@@ -109,23 +109,24 @@ class OfferView extends StatelessWidget {
                 SizedBox(
                   height: 8,
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Appc.PrimaryColor),
-                  child: Text(
-                    (title != "")
-                        ? "All  Deals  in $title"
-                        : (hctrl.selectedTag == null)
-                            ? "All  Deals  in ${hctrl.selectedDistrict.toString().capitalizeFirst.toString()}"
-                            : "${hctrl.selectedTag!.name!.toString().capitalizeFirst} in ${hctrl.selectedDistrict.toString().capitalizeFirst}",
-                    style: GoogleFonts.poppins(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
+                if (isHeading)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Appc.PrimaryColor),
+                    child: Text(
+                      (title != "")
+                          ? "All  Deals  in ${title!.replaceAll("null", "--:--")}"
+                          : (hctrl.selectedTag == null)
+                              ? "All  Deals  in ${hctrl.selectedDistrict.toString().capitalizeFirst.toString()}"
+                              : "${hctrl.selectedTag!.name!.toString().capitalizeFirst} in ${hctrl.selectedDistrict.toString().capitalizeFirst}",
+                      style: GoogleFonts.poppins(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    ),
                   ),
-                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -133,8 +134,8 @@ class OfferView extends StatelessWidget {
                   width: 100.w,
                   alignment: Alignment.center,
                   child: Wrap(
-                    spacing: 5.w,
-                    runSpacing: 3.w,
+                    spacing: 12,
+                    runSpacing: 8,
                     crossAxisAlignment: WrapCrossAlignment.start,
                     runAlignment: WrapAlignment.start,
                     alignment: WrapAlignment.start,

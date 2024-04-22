@@ -36,8 +36,8 @@ class CoinGenerator extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10)),
           child: Container(
             width: 92.w,
-            height: 30.h,
-            padding: EdgeInsets.only(top: 20, left: 20),
+            //  height: 30.h,
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color(0xffF6F8FF)),

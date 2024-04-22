@@ -1,0 +1,19 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.fugipie.showmydeals",
+      "sha256_cert_fingerprints":
+      ["D0:08:56:19:F0:45:AF:0E:C7:47:CC:87:8A:19:0E:26:CE:C1:32:C2:1A:5E:5B:74:93:1A:D9:CA:8F:46:07:C2"]
+    }
+  } ,
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.fugipie.showmydeals",
+      "sha256_cert_fingerprints":
+      ["8B:E8:A5:08:4D:39:2E:B7:CE:EA:9D:7C:12:41:20:C3:CD:55:AC:11:DF:78:43:DB:98:F1:48:D9:0F:60:09:73"]
+    }
+  } 
+]

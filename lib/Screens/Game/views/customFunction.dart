@@ -18,13 +18,14 @@ dialog(BuildContext context, int selectedIndex) {
               color: Colors.transparent,
               child: Container(
                 width: 82.89.w,
-                height: 29.69.h,
+                height: 35.69.h,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.white,
                     border: Border.all(color: Appc.PrimaryColor)),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -38,6 +39,7 @@ dialog(BuildContext context, int selectedIndex) {
                     Text(
                       gctrl.spinItem!.spinContent!.items![selectedIndex]
                           .heading!,
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15.sp,
@@ -45,6 +47,7 @@ dialog(BuildContext context, int selectedIndex) {
                     ),
                     Text(
                       gctrl.spinItem!.spinContent!.items![selectedIndex].text!,
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 10.sp,
@@ -64,7 +67,7 @@ dialog(BuildContext context, int selectedIndex) {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Appc.PrimaryColor),
-                        child: Text("Back",
+                        child: Text("OK",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13.sp,

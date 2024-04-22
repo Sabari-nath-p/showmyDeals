@@ -15,7 +15,7 @@ import 'package:odometer/odometer.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:show_my_deals/Base/AppColor.dart';
-import 'package:show_my_deals/Reward/RewardScreen.dart';
+import 'package:show_my_deals/Screens/Reward/RewardScreen.dart';
 import 'package:show_my_deals/Screens/Game/views/coinGenerator.dart';
 import 'package:show_my_deals/Screens/Game/controller.dart';
 import 'package:show_my_deals/Screens/Game/views/customFunction.dart';
@@ -47,7 +47,7 @@ class _GameSpinningViewState extends State<GameSpinningView> {
 
   @override
   Widget build(BuildContext context) {
-    //  gctrl.fetchData();
+    gctrl.fetchData();
     return GetBuilder<GameController>(builder: (_) {
       return SingleChildScrollView(
         controller: scrollController,
@@ -132,13 +132,14 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (gctrl.voucherList.length > 0)
-                      Get.to(() => RewardScreen(),
-                          transition: Transition.rightToLeft);
-                    else {
-                      FlashMessage(
-                          "No Reward avalible", "Currently no reward avalible");
-                    }
+                    // if (gctrl.voucherList.length > 0)
+                    gctrl.loadUserVoucher();
+                    Get.to(() => RewardScreen(),
+                        transition: Transition.rightToLeft);
+                    // else {
+                    //   FlashMessage(
+                    //       "No Reward avalible", "Currently no reward avalible");
+                    // }
                   },
                   child: Container(
                     height: 3.5.h,
@@ -167,7 +168,7 @@ class _GameSpinningViewState extends State<GameSpinningView> {
             if (gctrl.spinItem != null)
               SizedBox(
                 width: 92.1.w,
-                height: 51.03.h,
+                height: (1.h * 100 > 860) ? 60.03.h : 52.h,
                 child: Stack(
                   children: [
                     Positioned(
@@ -209,21 +210,25 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                         bottom: 17.00.h,
                         left: 15.57.w,
                         right: 15.57.w,
-                        child: Container(
-                          width: 68.68.w,
-                          height: 68.68.w,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    spreadRadius: .3,
-                                    color: Colors.black12,
-                                    offset: Offset(0, 0),
-                                    blurRadius: 2)
-                              ],
-                              //  borderRadius: BorderRadius.circular(100),
-                              border:
-                                  Border.all(color: Colors.white, width: 3.w)),
+                        top: .2.h,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 68.68.w,
+                            height: 68.68.w,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: .3,
+                                      color: Colors.black12,
+                                      offset: Offset(0, 0),
+                                      blurRadius: 2)
+                                ],
+                                //  borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                    color: Colors.white, width: 3.w)),
+                          ),
                         )),
 
                     Positioned(
@@ -245,15 +250,15 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                   hapticImpact: HapticImpact.heavy,
                                   onAnimationEnd: () async {
                                     gctrl.ctrl.play();
-                                    gctrl.update();
 
+                                    gctrl.update();
                                     gctrl.spinnerLoading = false;
                                     //gctrl.coin = gctrl.coin - 1000;
                                     gctrl.loadUserCoin();
                                     gctrl.loadUserVoucher();
                                     gctrl.update();
                                     dialog(context, selectedIndex);
-                                    await Future.delayed(Duration(seconds: 4));
+                                    await Future.delayed(Duration(seconds: 2));
                                     gctrl.ctrl.stop();
 
                                     gctrl.update();
@@ -271,8 +276,8 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                           data.smallText
                                               .toString()
                                               .toUpperCase(),
-                                          style:
-                                              GoogleFonts.lexend(fontSize: 8),
+                                          style: GoogleFonts.lexend(
+                                              fontSize: 7.sp),
                                         ),
                                       ),
                                   ],
@@ -284,28 +289,29 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                   color: Appc.PrimaryColor, width: 3.w)),
                         )),
 
-                    Positioned(
-                        top: 17.82.h,
-                        //bottom: 0,
-                        right: 0,
-                        left: 0,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(-.5, 1),
-                                      color: Colors.black54,
-                                      spreadRadius: .4,
-                                      blurRadius: 1)
-                                ],
-                                color: Colors.white),
-                          ),
-                        )),
+                    if (false)
+                      Positioned(
+                          top: 17.82.h,
+                          //bottom: 0,
+                          right: 0,
+                          left: 0,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(-.5, 1),
+                                        color: Colors.black54,
+                                        spreadRadius: .4,
+                                        blurRadius: 1)
+                                  ],
+                                  color: Colors.white),
+                            ),
+                          )),
                     Positioned(
                         bottom: 19.29.h,
                         left: 16.57.w,
@@ -395,6 +401,9 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                       spinController.add(gctrl
                                           .spinItem!.spinContent!.items!
                                           .indexOf(data));
+                                      selectedIndex = gctrl
+                                          .spinItem!.spinContent!.items!
+                                          .indexOf(data);
                                       setState(() {});
 
                                       break;
@@ -402,6 +411,7 @@ class _GameSpinningViewState extends State<GameSpinningView> {
                                   }
                                 }
                               } else {
+                                // dialog(context, 1);
                                 FlashMessage("Insufficient Coins",
                                     "Minimum 1000 coin is required to spin. Claim coin by daily reward");
                               }

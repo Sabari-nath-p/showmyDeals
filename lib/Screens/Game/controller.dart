@@ -14,7 +14,6 @@ import 'package:show_my_deals/Screens/AuthenticationScreen/AuthenticationScreenM
 import 'package:show_my_deals/Screens/Game/spinnerItem.dart';
 import 'package:show_my_deals/appConfig.dart';
 import 'package:show_my_deals/src/FlashMessage.dart';
-import 'package:show_my_deals/src/InitialiseData.dart';
 
 class GameController extends GetxController {
   String id = "";
@@ -98,6 +97,7 @@ class GameController extends GetxController {
     // coinCount.value = 0;
 
     voucherList.clear();
+    update();
     final Response = await get(
       Uri.parse(
         AppConfig.endpoint + "user/rewards?id=$id&secret=$sid",
@@ -109,11 +109,15 @@ class GameController extends GetxController {
         " -->" +
         Response.statusCode.toString());
 
+    print(Response.body);
     if (Response.statusCode == 200) {
       var js = json.decode(Response.body);
       for (var data in js["rewards"]) {
         voucherList.add(Items.fromJson(data));
       }
+
+      voucherList
+          .sort((a, b) => b.active.toString().compareTo(a.active.toString()));
       update();
     }
   }
@@ -159,31 +163,27 @@ class GameController extends GetxController {
   }
 
   getCurrentDateTime() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String temp = pref.getString("LAST_SPIN").toString();
-    counterDuration = null;
-    if (temp != "null") {
-      int lastSpin = int.parse(temp);
-      final Response = await get(Uri.parse(AppConfig.endpoint + "time"));
+    final Response =
+        await get(Uri.parse(AppConfig.endpoint + "user/time?id=$id"));
+    print(Response.body);
 
-      if (Response.statusCode == 200) {
-        var js = json.decode(Response.body);
-        int current = js["time"];
-        // if ((lastSpin + 20) < current) {
-        if ((lastSpin + 14400) < current) {
-          ClaimButton = true;
-          update();
-        } else {
-          ClaimButton = false;
-          lastSpin = lastSpin + 14400;
-          counterDuration =
-              DateTime.now().add(Duration(seconds: lastSpin - current));
-          update();
-        }
+    if (Response.statusCode == 200) {
+      var js = json.decode(Response.body);
+      int current = js["time"];
+      int lastSpin = int.parse(js["lastCoinClaim"].toString());
+      // if ((lastSpin + 20) < current) {
+      if ((lastSpin + 14400) < current) {
+        ClaimButton = true;
+        update();
+      } else {
+        ClaimButton = false;
+        lastSpin = lastSpin + 14400;
+        counterDuration =
+            DateTime.now().add(Duration(seconds: lastSpin - current));
+        update();
       }
     } else {
-      ClaimButton = true;
-      update();
+      ClaimButton = false;
     }
   }
 
@@ -201,7 +201,7 @@ class GameController extends GetxController {
 
     log("Request --> " +
         AppConfig.endpoint +
-        "user/rewards?id=$id&secret=$sid" +
+        "user/deleteaccount" +
         " -->" +
         Response.statusCode.toString());
 
@@ -220,6 +220,7 @@ class GameController extends GetxController {
       FlashMessage("Deletion Successfully failed",
           "Your account has been failed due to uncounted error");
     }
+    Get.deleteAll(force: true);
   }
 
   @override

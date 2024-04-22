@@ -26,6 +26,7 @@ class AuthenticationController extends GetxController {
   bool Loading = false;
   String? SelectedDistrict;
   var userDate;
+  DateTime counterDateTime = DateTime.now();
 
   changeCountryCode(BuildContext context) async {
     FlCountryCodePicker countryPicker = FlCountryCodePicker(
@@ -139,7 +140,9 @@ class AuthenticationController extends GetxController {
       // TOP = response.data["top"];
       OtpController.text = "";
       Loading = false;
+      counterDateTime = DateTime.now().add(Duration(seconds: 60));
       update();
+
       Get.to(() => OTPVerificationScreen(), transition: Transition.rightToLeft);
     } else {
       Loading = false;

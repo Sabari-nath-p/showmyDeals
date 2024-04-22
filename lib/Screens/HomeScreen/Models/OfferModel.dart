@@ -16,6 +16,8 @@ class OfferModel {
   List<String>? of;
   String? shopid;
   String? shopname;
+  String? linkText;
+  String? link;
   String? shopaddress;
   List<GroupMembers>? groupMembers;
   String? logo;
@@ -34,6 +36,7 @@ class OfferModel {
       this.name,
       this.from,
       this.to,
+      this.linkText,
       this.ongoing,
       this.public,
       this.pages,
@@ -48,6 +51,7 @@ class OfferModel {
       this.shopaddress,
       this.groupMembers,
       this.logo,
+      this.link,
       this.district,
       this.state,
       this.viewCount,
@@ -77,6 +81,9 @@ class OfferModel {
     shopid = json['shopid'];
     shopname = json['shopname'];
     shopaddress = json['shopaddress'];
+    linkText = json["linkText"];
+    link = json["link"];
+
     if (json['groupMembers'] != null) {
       groupMembers = <GroupMembers>[];
       json['groupMembers'].forEach((v) {

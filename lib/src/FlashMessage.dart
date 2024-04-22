@@ -22,23 +22,25 @@ FlashMessage(String title, String body) async {
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Appc.PrimaryColor),
+                  borderRadius: BorderRadius.circular(12), color: Colors.white),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 13.71.w,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 44),
-                        child: SvgPicture.asset(
-                          "lib/Base/Assets/Images/bubbles.svg",
-                          colorFilter: ColorFilter.mode(
-                              HSLColor.fromColor(Appc.PrimaryColor)
-                                  .withLightness((.6 - 0.1).clamp(0.0, 1.0))
-                                  .toColor(),
-                              BlendMode.srcIn),
+                  Opacity(
+                    opacity: .2,
+                    child: SizedBox(
+                      width: 13.71.w,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: EdgeInsets.only(top: 44),
+                          child: SvgPicture.asset(
+                            "lib/Base/Assets/Images/bubbles.svg",
+                            colorFilter: ColorFilter.mode(
+                                HSLColor.fromColor(Appc.PrimaryColor)
+                                    .withLightness((.6 - 0.1).clamp(0.0, 1.0))
+                                    .toColor(),
+                                BlendMode.srcIn),
+                          ),
                         ),
                       ),
                     ),
@@ -54,13 +56,13 @@ FlashMessage(String title, String body) async {
                             style: GoogleFonts.poppins(
                                 fontSize: 12.33.sp,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                                color: Colors.black),
                             maxLines: 1,
                           ),
                           Text(
                             body, //  "That Email Address is already in use! Please try with a different one.",
                             style: GoogleFonts.poppins(
-                                fontSize: 10.sp, color: Colors.white),
+                                fontSize: 10.sp, color: Colors.black),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),

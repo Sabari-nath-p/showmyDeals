@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -138,17 +139,21 @@ class _DisctrictSelectorState extends State<DisctrictSelector> {
                       await SharedPreferences.getInstance();
                   preferences.setString("DISTRICT", SelectedDistrict);
 
-                  ctrl.loadOffers();
-                  ctrl.loadJobs();
-                  ctrl.loadShopes();
-                  ctrl.selectedTag = null;
                   ctrl.selectedDistrict = SelectedDistrict;
                   ctrl.selectedJobModel = null;
                   ctrl.selectedOfferModel = null;
                   ctrl.selectOutletModel = null;
+                  ctrl.selectedTag = null;
+                  ctrl.loadOffers();
+                  ctrl.loadJobs();
+                  ctrl.loadShopes();
                   gctrl.fetchData();
                   ctrl.update();
                   Get.back();
+                  await FirebaseMessaging.instance
+                      .unsubscribeFromTopic(ctrl.selectedDistrict!);
+                  await FirebaseMessaging.instance
+                      .subscribeToTopic(SelectedDistrict);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.8.w),

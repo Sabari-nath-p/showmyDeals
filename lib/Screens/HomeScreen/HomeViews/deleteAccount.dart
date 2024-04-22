@@ -66,6 +66,7 @@ class DeleteAccountBottomSheet extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     context.deleteAccount();
+                    
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 6.8.w),

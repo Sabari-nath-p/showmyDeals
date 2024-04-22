@@ -149,6 +149,9 @@ class AuthenticationView extends StatelessWidget {
                   FlashMessage("Invalid Entry",
                       "Some fields were left empty or contain invalid information");
                   return;
+                } else if (authctrl.PhoneController.text.length != 10) {
+                  FlashMessage(
+                      "Invalid Entry", "Phone number enter is invalid");
                 } else if (authctrl.Loading) {
                   return;
                 } else {
@@ -178,31 +181,37 @@ class AuthenticationView extends StatelessWidget {
             SizedBox(
               height: 5.4.h,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Need Help ?  ",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                      color: Colors.black,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w400),
-                ),
-                InkWell(
-                  onTap: () {
-                    launchUrl(Uri.parse("tel:" + AppConfig.contactNumber));
-                  },
-                  child: Text(
-                    "Contact Us",
+            InkWell(
+              onTap: () {
+                launchUrl(Uri.parse("https://www.showmydeals.in/contact"));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Need Help ?  ",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                        color: Appc.PrimaryColor,
+                        color: Colors.black,
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w400),
                   ),
-                ),
-              ],
+                  InkWell(
+                    onTap: () {
+                      launchUrl(
+                          Uri.parse("https://www.showmydeals.in/contact"));
+                    },
+                    child: Text(
+                      "Contact Us",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                          color: Appc.PrimaryColor,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),

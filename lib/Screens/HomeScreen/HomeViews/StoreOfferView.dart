@@ -134,58 +134,72 @@ class StoreOfferView extends StatelessWidget {
                     for (var data in hctrl.outletList)
                       if (hctrl.selectedStoreTag == "" ||
                           hctrl.selectedStoreTag == data.storeType)
-                        FadeIn(
-                          child: InkWell(
-                            onTap: () {
-                              if (data.isShop!) {
-                                hctrl.selectOutletModel = data;
+                        if (!data.isInGroup!)
+                          FadeIn(
+                            child: InkWell(
+                              onTap: () {
+                                if (data.isShop!) {
+                                  hctrl.selectOutletModel = data;
 
-                                Get.to(() => ShopDetailedPage(
-                                      shopid: data.id!,
-                                    ));
-                                hctrl.update();
-                              } else {
-                                Get.to(
-                                    () => GrouOfferScreen(
-                                          id: data.id!,
-                                          name: data.name!,
-                                          thumbnail: data!.images!.logo!.url!,
-                                        ),
-                                    transition: Transition.rightToLeft);
-                              }
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 39.73.w,
-                                  height: 11.76.h,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      data!.images!.logo!.url!,
-                                      fit: BoxFit.fill,
+                                  Get.to(() => ShopDetailedPage(
+                                        shopid: data.id!,
+                                      ));
+                                  hctrl.update();
+                                } else {
+                                  Get.to(
+                                      () => GrouOfferScreen(
+                                            id: data.id!,
+                                            name: data.name!,
+                                            thumbnail: data!.images!.logo!.url!,
+                                          ),
+                                      transition: Transition.rightToLeft);
+                                }
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 39.73.w,
+                                    height: 11.76.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        data!.images!.logo!.url!,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                SizedBox(
-                                  width: 39.73.w,
-                                  child: Text(
-                                    data.name!,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: Appc.PrimaryColor),
+                                  SizedBox(
+                                    height: 5,
                                   ),
-                                )
-                              ],
+                                  SizedBox(
+                                    width: 39.73.w,
+                                    child: Text(
+                                      data.name!,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 39.73.w,
+                                    child: Text(
+                                      (data.isShop!)
+                                          ? data.address!
+                                          : "All stores in ${data.district}",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black45),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        )
+                          )
                   ],
                 ),
               ),

@@ -35,8 +35,8 @@ class OfferCard extends StatelessWidget {
       },
       child: FadeIn(
         child: Container(
-          width: 39.4.w,
-          height: 26.11.h,
+          width: 150,
+          height: 230,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -66,8 +66,8 @@ class OfferCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 13.77.w,
-                          height: 4.39.h,
+                          width: 53,
+                          height: 37.3,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
@@ -83,20 +83,20 @@ class OfferCard extends StatelessWidget {
                         ),
                         Expanded(child: Container()),
                         Container(
-                          width: 14.9.w,
-                          height: 2.9.h,
+                          width: 56,
+                          height: 35,
                           alignment: Alignment.center,
                           child: Text(
                             "${offerData.pages!.length} Pages",
                             style: GoogleFonts.poppins(
-                                fontSize: 7.5.sp,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white),
                           ),
                           margin: EdgeInsets.only(right: 10),
                           decoration: BoxDecoration(
                               color: Appc.PrimaryColor,
-                              borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(5)),
                         )
                       ],
                     ),
